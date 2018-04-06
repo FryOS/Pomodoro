@@ -16,6 +16,7 @@ Task.maxID = 1;
 class ServiseTask {
     constructor() {
         this.data = [];
+        this.keyLocalStorage = 'tasks';
     }
 
     start(taskId) {
@@ -77,11 +78,11 @@ class ServiseTask {
     }
 
     getData() {
-        const json = window.localStorage.getItem('tasks');
+        const json = window.localStorage.getItem(this.keyLocalStorage);
         const tasks = JSON.parse(json);
-        // tasks.forEach(item => {
-        //     console.log(item);
-        // });
+        tasks.forEach(item => {
+            console.log(item);
+        });
         console.log('getData мой JSON TASKS: ', json);
         return tasks;
     }
@@ -92,7 +93,7 @@ class ServiseTask {
         // const tasks = this.getData();
         // tasks.push(task);
         let json = JSON.stringify(this.data);
-        window.localStorage.setItem('tasks ', json);
+        window.localStorage.setItem(this.keyLocalStorage, json);
         console.log('JSON: ', json);
     }
 

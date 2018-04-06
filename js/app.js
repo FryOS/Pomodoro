@@ -22,7 +22,7 @@
     // }
 
 
-     renderTask(servise.getData());
+     renderTask(servise.getNameOfTask());
 
 
     add.addEventListener('click', event => {
