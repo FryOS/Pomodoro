@@ -23,7 +23,6 @@
 
 
      renderTask(servise.getData());
-     console.log(servise.getData());
 
 
     add.addEventListener('click', event => {
