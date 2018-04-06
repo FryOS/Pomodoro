@@ -88,10 +88,6 @@ class ServiseTask {
     }
 
     saveData() {
-
-        // localStorage.setItem('tasks', JSON.stringify(tasks));
-        // const tasks = this.getData();
-        // tasks.push(task);
         let json = JSON.stringify(this.data);
         window.localStorage.setItem(this.keyLocalStorage, json);
         console.log('JSON: ', json);
@@ -105,7 +101,8 @@ class ServiseTask {
 }
 
 const servise = new ServiseTask();
-
+servise.keyLocalStorage = 'blaBla';
+window.localStorage.setItem(servise.keyLocalStorage, null)
 
 const task1 = new Task(Task.maxID++, 'JS');
 const task2 = new Task(Task.maxID++, 'C++');
@@ -119,8 +116,9 @@ servise.add(task3);
 servise.add(task4);
 servise.add(task5);
 
-const v = servise.saveData(task1);
-console.log('servise.saveData(task1) ', v);
+servise.saveData();
+const myTasks = servise.getData();
+console.log('myblaBla ', myTasks);
 
 
 

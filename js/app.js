@@ -23,6 +23,7 @@
 
 
      renderTask(servise.getNameOfTask());
+     console.log(servise.getNameOfTask());
 
 
     add.addEventListener('click', event => {
