@@ -1,16 +1,21 @@
 class Task {
-	constructor(id, name) {
-		this.id = id;
+	constructor(name) {
+		this.id = Task.getNewId();
 		this.status = false;
 		this.name = name;
+		this.runCount = 0;
 		// this.performer = performer;
 		// this.timeStart = Date.now();
 		// this.spentTime = this.timeStart + 25;
 	}
 
+
 }
 
 Task.maxID = 1;
+Task.getNewId = function () {
+	return Task.maxID++;
+}
 
 
 class ServiseTask {
@@ -20,15 +25,35 @@ class ServiseTask {
 	}
 
 	start(taskId) {
-
+		const task = this.getTaskById(taskId);
+		task.runCount++;
+		task.status = true;
+		this.saveTask(task);
 	}
 
 	stop(taskId) {
-
+		const task = this.getTaskById(taskId);
+		// task.runCount; останавливаем задачу
+		task.status = false;
+		this.saveTask(task);
 	}
 
 	pause(taskId) {
+		const task = this.getTaskById(taskId);
+		// task.runCount++; ставим на паузу задачу
+		task.status = true;
+		this.saveTask(task);
+	}
 
+	canStart() {
+		const array = this.getData();
+		for (let i = 0; i < array.length; i++) {
+			const element = array[i];
+			if (element.status) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	remove(task) {
@@ -53,10 +78,19 @@ class ServiseTask {
 	}
 
 	getTaskById(id) {
-		this.data.filter(item => {
-			item.id === id;
-		});
-		return id;
+		const array = this.getData();
+		for (let i = 0; i < array.length; i++) {
+			const element = array[i];
+			if (element.id === id) {
+				return element;
+			}
+		}
+
+		// const array = this.getData().filter(item => {
+		// 	item.id === id;
+		// });
+		// console.log(array);
+		// return array[0];
 	}
 
 	getTaskByStatus(status) {
@@ -68,34 +102,62 @@ class ServiseTask {
 	}
 
 	getNameOfTask() {
-		const data = this.getData();		
 		const names = [];
-		const item = data.forEach(item => {
-			 names.push(item.name)
-		})
+		const data = this.getData();
+		if (data) {
+
+			const item = data.forEach(item => {
+				names.push(item.name)
+			})
+		}
 		return names;
 	}
 
 	getData() {
 		const json = window.localStorage.getItem(this.keyLocalStorage);
-		const tasks = JSON.parse(json);
-		// tasks.forEach(item => {
-		//     console.log(item);
-		// });
-		return tasks;
+		if (json) {
+			return JSON.parse(json);
+		} else {
+			return [];
+		}
 	}
 
 	saveData() {
-		// localStorage.setItem('tasks', JSON.stringify(tasks));
-		// const tasks = this.getData();
-		// tasks.push(task);
+
 		let json = JSON.stringify(this.data);
 		window.localStorage.setItem(this.keyLocalStorage, json);
 	}
 
+	saveTask(task) {
+		this.data = this.getData();
+		let origin = null;
+		for (let i = 0; i < this.data.length; i++) {
+			const element = this.data[i];
+			if (element.id === task.id) {
+				origin = element;
+				break;
+			}
+		}
+
+
+
+		// const array = this.data.filter(item => {
+		// 	item.id === task.id;
+		// });
+		// const origin = array[0];
+		if (origin) {
+			origin.status = task.status;
+			origin.name = task.name;
+			origin.runCount = task.runCount;
+		} else {
+			this.data.push(task);
+		}
+		this.saveData();
+	}
+
 
 	getAllTasks() {
-		return this.data;
+		return this.getData();
 	}
 
 }

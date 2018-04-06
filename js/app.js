@@ -21,24 +21,30 @@
 	//     });
 	// }
 
-	const data = servise.getNameOfTask();
-	console.log(data);
 
-	data.forEach(elem => {
-		renderTask(elem);
-	});
 
-	// renderTask(data);
+	function renderAllTasks() {
+		collection.innerHTML = '';
+		const data = servise.getAllTasks();
+		console.log(data);
+
+		data.forEach(elem => {
+			renderTask(elem);
+		});
+
+	}
+
+	renderAllTasks();
 
 	add.addEventListener('click', event => {
 		const value = nameElement.value.trim();
-		const task = new Task(idLi, value);
-
-		servise.add(task); // сохраняем в массив
+		const task = new Task(value);
+		servise.saveTask(task);
+		// servise.add(task); // сохраняем в массив
 		// tasks.push(value);
 
 		// addTask(value);
-		renderTask(value); // рисуем
+		renderTask(task); // рисуем
 		nameElement.value = '';
 
 		// localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -77,8 +83,8 @@
 
 	collection.addEventListener('click', event => {
 		if (event.target.classList.contains('playTask')) {
-			if (isStart) {
-				console.log('Нельзя нажать');
+			if (!servise.canStart()) {
+				alert('Нельзя нажать');
 				return
 			} else {
 				const play = event.target;
@@ -87,30 +93,29 @@
 				const taskId = Number(play.getAttribute('data-task-id'));
 				console.log(taskId);
 				if (play.innerHTML === 'play_arrow') {
-					isStart = true;
-					//if(taskId === ){
-					//  countStart++;
-					//}
-
+					
+					servise.start(taskId);
 					play.innerHTML = 'pause';
 					setTimeout(() => {
 
 						// let notification = new Notification(`Задача ${taskId} закончилась`)
-						myTimeOut(myNotification(
-							`Задача ${taskId} закончилась`,
-							'Приступайте к следующей или начните задачу заново',
-							theIcon));
-						isStart = false;
+						// myTimeOut(myNotification(
+						// 	`Задача ${taskId} закончилась`,
+						// 	'Приступайте к следующей или начните задачу заново',
+						// 	theIcon));
+						alert(`Задача ${taskId} закончилась`);
+						servise.stop(taskId);
+						renderAllTasks();
 						play.innerHTML = 'play_arrow';
 					}, globalTime);
 
-
-				} else(
+				} else {
 					play.innerHTML = 'play_arrow'
-				)
+				}
 				// console.log(countStart);
 
 			}
+			renderAllTasks();
 		}
 
 	});
@@ -132,10 +137,11 @@
 		taskElement.setAttribute('draggable', 'true');
 		// taskElement.setAttribute('data-task-id', nextID++);
 		taskElement.innerHTML = ` 
+		<p>${task.runCount}</p>
         <input id="${idLi++}" type="checkbox">      
-        <label class="chekbox" for="${forlabel++}"><span>${task}</span></label>           
+        <label class="chekbox" for="${forlabel++}"><span>${task.name}</span></label>           
         <a href="#" class="remove-task secondary-content">        
-        <i class="material-icons right red-text playTask" data-task-id="${nextID++}">play_arrow</i>
+        <i class="material-icons right red-text playTask" data-task-id="${task.id}">play-arrow</i>
         </a>
         `;
 		collection.appendChild(taskElement);
