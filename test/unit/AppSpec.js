@@ -1,2 +1,0 @@
-describe('App Spec', function() {
-});

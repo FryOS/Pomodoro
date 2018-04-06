@@ -8,25 +8,38 @@
     let countStart = 0;
     let nextID = 1;
     idLi = 1;
-    forlabel = 1
+    forlabel = 1;
 
     theBody = 'Это сервис Pomodorro';
     theIcon = 'http://bml-electronics.com/images/BML_E3_metallic_earphones.png';
 
 
-    if (localStorage.getItem('tasks')!= null){
-        tasks = JSON.parse(localStorage.getItem('tasks'));
-        tasks.forEach(elem => {
-          addTask(elem);
-        });
-    }
+    // if (localStorage.getItem('tasks')!= null){
+    //     tasks = JSON.parse(localStorage.getItem('tasks'));
+    //     tasks.forEach(elem => {
+    //       addTask(elem);
+    //     });
+    // }
+
+
+     renderTask(servise.getData());
+     console.log(servise.getData());
+
 
     add.addEventListener('click', event => {
         const value = nameElement.value.trim();
-        tasks.push(value);
-        addTask(value);
+        const task = new Task(idLi,value);
+        console.log(task);
+
+        servise.add(task); // сохраняем в массив
+        // tasks.push(value);
+
+        // addTask(value);
+        renderTask(value); // рисуем
         nameElement.value = '';
-        localStorage.setItem('tasks', JSON.stringify(tasks));
+
+        // localStorage.setItem('tasks', JSON.stringify(tasks));
+        servise.saveData();
     });
     
     function myTimeOut(notification, time=2500) {
@@ -107,7 +120,7 @@
         }
     });
 
-    function addTask(task) {
+    function renderTask(task) {
         const taskElement = document.createElement('li');
         taskElement.classList.add('collection-item');
         taskElement.setAttribute('draggable', 'true');
@@ -121,6 +134,8 @@
         `;
         collection.appendChild(taskElement);
     }
+
+
     let dragged = null;
 
     Array.from(document.querySelectorAll('.collection-item[draggable="true"]')).forEach(item => {
