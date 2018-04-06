@@ -3,7 +3,7 @@
     const collection = document.querySelector('.collection');
     const nameElement = document.querySelector('#name');
     let tasks = [];
-    const globalTime = 2000;
+    const globalTime = 2500;
     let isStart = false;
     let countStart = 0;
     let nextID = 1;
