@@ -77,7 +77,7 @@ class ServiseTask {
     }
 
     getData() {
-        const json = localStorage.getItem('tasks');
+        const json = window.localStorage.getItem('tasks');
         const tasks = JSON.parse(json);
         // tasks.forEach(item => {
         //     console.log(item);
@@ -92,7 +92,7 @@ class ServiseTask {
         // const tasks = this.getData();
         // tasks.push(task);
         let json = JSON.stringify(this.data);
-        localStorage.setItem('tasks ', json);
+        window.localStorage.setItem('tasks ', json);
         console.log('JSON: ', json);
     }
 
